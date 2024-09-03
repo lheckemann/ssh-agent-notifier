@@ -15,5 +15,5 @@ clap = { version = "4.5.16", features = ["derive"] }
 libnotify = "1.0.3"
 procfs = "0.16.0"
 service-binding = "3.0.0"
-ssh-agent-lib = { git = "https://github.com/wiktor-k/ssh-agent-lib", version = "0.4.0" }
+ssh-agent-lib = { git = "https://github.com/wiktor-k/ssh-agent-lib", rev = "7f069b1a9c2dc4656f104e2e3643a0efef096e37" }
 tokio = { version = "1.40.0", features = ["net", "macros", "rt-multi-thread", "sync"] }
