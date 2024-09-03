@@ -2,11 +2,11 @@
 
 Has this ever happened to you?
 
-> You: `git pull`
-> Your YubiKey: *starts blinking to indicate that you should touch it to confirm that SSH should be allowed to authenticate to the git server*
-> You: *waits for git pull to do its thing*
-> Your YubiKey: *times out*
-> git: *fails*
+> You: `git pull`  
+> Your YubiKey: *starts blinking to indicate that you should touch it to confirm that SSH should be allowed to authenticate to the git server*  
+> You: *waits for git pull to do its thing*  
+> Your YubiKey: *times out*  
+> git: *fails*  
 > You: *is annoyed*
 
 Have no fear, ssh-agent-notifier is here!
