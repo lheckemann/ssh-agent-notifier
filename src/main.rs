@@ -116,7 +116,6 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    env_logger::init();
     libnotify::init("notifying-ssh-agent");
 
     let args = Args::parse();
