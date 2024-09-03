@@ -1,0 +1,20 @@
+[package]
+name = "ssh-agent-notifier"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = [
+    "Linus Heckemann <git@sphalerite.org>",
+    "Wiktor Kwapisiewicz <wiktor@metacode.biz>",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.5.16", features = ["derive"] }
+env_logger = "0.11.5"
+libnotify = "1.0.3"
+procfs = "0.16.0"
+service-binding = "3.0.0"
+ssh-agent-lib = { git = "https://github.com/wiktor-k/ssh-agent-lib", version = "0.4.0" }
+tokio = { version = "1.40.0", features = ["net", "macros", "rt-multi-thread", "sync"] }
