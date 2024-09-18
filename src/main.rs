@@ -41,7 +41,7 @@ impl Session for NotifyOnSign {
             tokio::task::spawn_blocking(move || {
                 let notification = libnotify::Notification::new("🥺👉👈 Signing request", Some(body.as_str()), None);
                 let _ = notification.show();
-                if let Ok(_) = receiver.blocking_recv() {
+                if receiver.blocking_recv().is_ok() {
                     let _ = notification.update("✅ Signed", body.as_str(), None);
                     let _ = notification.show();
                 }
@@ -68,7 +68,7 @@ impl Agent<tokio::net::UnixListener> for Forwarder {
                 process_desc = format!("{pid} (unknown)");
                 if let Ok(peer_process) = procfs::process::Process::new(pid) {
                     if let Ok(cmdline) = peer_process.cmdline() {
-                        if let Some(exe) = cmdline.get(0) {
+                        if let Some(exe) = cmdline.first() {
                             process_desc = format!("{pid} ({exe:?})");
                         }
                     }
