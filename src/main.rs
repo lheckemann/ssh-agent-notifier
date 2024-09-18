@@ -40,11 +40,15 @@ impl Session for NotifyOnSign {
 
             tokio::task::spawn_blocking(move || {
                 let notification = libnotify::Notification::new("🥺👉👈 Signing request", Some(body.as_str()), None);
+                notification.set_timeout(libnotify_sys::NOTIFY_EXPIRES_NEVER);
                 let _ = notification.show();
-                if let Ok(new_summary) = receiver.blocking_recv() {
-                    let _ = notification.update(new_summary, body.as_str(), None);
-                    let _ = notification.show();
-                }
+                let new_summary = match receiver.blocking_recv() {
+                    Ok(new_summary) => new_summary,
+                    Err(e) => format!("😵‍💫 Couldn't get result: {e:?}")
+                };
+                let _ = notification.update(&new_summary, Some(body.as_str()), None);
+                notification.set_timeout(libnotify_sys::NOTIFY_EXPIRES_DEFAULT);
+                let _ = notification.show();
             });
         };
         let response = self.target.handle(message).await?;
@@ -54,7 +58,7 @@ impl Session for NotifyOnSign {
             Response::ExtensionResponse(_) => "🤷 lol idk",
             Response::Success | Response::IdentitiesAnswer(_) => "😵‍💫 dazed and confused",
         };
-        let _ = sender.send(summary);
+        let _ = sender.send(summary.to_string());
         Ok(response)
     }
 }

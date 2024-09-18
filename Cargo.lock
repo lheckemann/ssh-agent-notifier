@@ -1257,6 +1257,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "libnotify",
+ "libnotify-sys",
  "procfs",
  "service-binding",
  "ssh-agent-lib",
