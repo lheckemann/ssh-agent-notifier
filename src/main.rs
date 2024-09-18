@@ -41,16 +41,20 @@ impl Session for NotifyOnSign {
             tokio::task::spawn_blocking(move || {
                 let notification = libnotify::Notification::new("🥺👉👈 Signing request", Some(body.as_str()), None);
                 let _ = notification.show();
-                if receiver.blocking_recv().is_ok() {
-                    let _ = notification.update("✅ Signed", body.as_str(), None);
+                if let Ok(new_summary) = receiver.blocking_recv() {
+                    let _ = notification.update(new_summary, body.as_str(), None);
                     let _ = notification.show();
                 }
             });
         };
         let response = self.target.handle(message).await?;
-        if let Response::SignResponse(_) = &response {
-            let _ = sender.send(());
-        }
+        let summary = match &response {
+            Response::SignResponse(_) => "✅ Signed",
+            Response::Failure | Response::ExtensionFailure => "❌ Failed",
+            Response::ExtensionResponse(_) => "🤷 lol idk",
+            Response::Success | Response::IdentitiesAnswer(_) => "😵‍💫 dazed and confused",
+        };
+        let _ = sender.send(summary);
         Ok(response)
     }
 }
