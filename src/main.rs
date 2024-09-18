@@ -39,10 +39,10 @@ impl Session for NotifyOnSign {
             };
 
             tokio::task::spawn_blocking(move || {
-                let notification = libnotify::Notification::new("Signing request", Some(body.as_str()), None);
+                let notification = libnotify::Notification::new("🥺👉👈 Signing request", Some(body.as_str()), None);
                 let _ = notification.show();
                 if let Ok(_) = receiver.blocking_recv() {
-                    let _ = notification.update("Signed", body.as_str(), None);
+                    let _ = notification.update("✅ Signed", body.as_str(), None);
                     let _ = notification.show();
                 }
             });
