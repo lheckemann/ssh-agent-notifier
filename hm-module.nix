@@ -44,6 +44,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.ssh-agent-notifier" pkgs lib.platforms.linux)
+    ];
+
     systemd.user.services.ssh-agent-notifier = {
       Install.WantedBy = ["default.target"];
       Service.ExecStart = "${cfg.package}/bin/ssh-agent-notifier --host unix://%t/${cfg.listenSocket} --target ${cfg.backend}";
