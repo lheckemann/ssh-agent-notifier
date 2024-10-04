@@ -14,6 +14,7 @@ use ssh_agent_lib::{
     error::AgentError,
     proto::{Request, Response},
 };
+use notify_rust::{Hint, Notification, Timeout};
 use tokio::sync::oneshot;
 
 struct NotifyOnSign {
@@ -39,16 +40,23 @@ impl Session for NotifyOnSign {
             };
 
             tokio::task::spawn_blocking(move || {
-                let notification = libnotify::Notification::new("🥺👉👈 Signing request", Some(body.as_str()), None);
-                notification.set_timeout(libnotify_sys::NOTIFY_EXPIRES_NEVER);
-                let _ = notification.show();
+                let mut notification = Notification::new()
+                    .summary("🥺👉👈 Signing request")
+                    .body(body.as_str())
+                    .hint(Hint::Resident(true))
+                    .timeout(0)
+                    .show()
+                    .unwrap();
+
                 let new_summary = match receiver.blocking_recv() {
                     Ok(new_summary) => new_summary,
                     Err(e) => format!("😵‍💫 Couldn't get result: {e:?}")
                 };
-                let _ = notification.update(&new_summary, Some(body.as_str()), None);
-                notification.set_timeout(libnotify_sys::NOTIFY_EXPIRES_DEFAULT);
-                let _ = notification.show();
+                notification
+                    .summary(&new_summary)
+                    .hint(Hint::Resident(false))
+                    .timeout(Timeout::Default);
+                notification.update();
             });
         };
         let response = self.target.handle(message).await?;
@@ -127,8 +135,6 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    libnotify::init("notifying-ssh-agent")?;
-
     let args = Args::parse();
 
     bind(
