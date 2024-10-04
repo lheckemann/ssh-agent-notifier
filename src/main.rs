@@ -4,6 +4,7 @@
 // Based on the proto-dumper example from ssh-agent-lib.
 
 use clap::Parser;
+use notify_rust::{Hint, Notification, Timeout};
 use service_binding::Binding;
 use ssh_agent_lib::{
     agent::bind,
@@ -14,7 +15,6 @@ use ssh_agent_lib::{
     error::AgentError,
     proto::{Request, Response},
 };
-use notify_rust::{Hint, Notification, Timeout};
 use tokio::sync::oneshot;
 
 struct NotifyOnSign {
@@ -28,12 +28,15 @@ impl Session for NotifyOnSign {
         let (sender, receiver) = oneshot::channel();
         if let Request::SignRequest(req) = &message {
             let identities = self.target.request_identities().await?;
-            let identity = identities.iter().find_map(|id| {
-                if id.pubkey == req.pubkey {
-                    return Some(id.comment.to_string())
-                }
-                None
-            }).unwrap_or("<unknown identity>".to_string());
+            let identity = identities
+                .iter()
+                .find_map(|id| {
+                    if id.pubkey == req.pubkey {
+                        return Some(id.comment.to_string());
+                    }
+                    None
+                })
+                .unwrap_or("<unknown identity>".to_string());
             let body = match &self.peer_info {
                 Some(peer_info) => format!("Client: {peer_info}\nWants to use pubkey: {identity}"),
                 None => format!("Unknown Client\nWants to use pubkey: {identity}"),
@@ -50,7 +53,7 @@ impl Session for NotifyOnSign {
 
                 let new_summary = match receiver.blocking_recv() {
                     Ok(new_summary) => new_summary,
-                    Err(e) => format!("😵‍💫 Couldn't get result: {e:?}")
+                    Err(e) => format!("😵‍💫 Couldn't get result: {e:?}"),
                 };
                 notification
                     .summary(&new_summary)
@@ -78,21 +81,24 @@ struct Forwarder {
 #[cfg(unix)]
 impl Agent<tokio::net::UnixListener> for Forwarder {
     fn new_session(&mut self, socket: &tokio::net::UnixStream) -> impl Session {
-        let peer_desc = socket.peer_cred().map(|peer| {
-            let mut process_desc = String::from("<unknown>");
-            if let Some(pid) = peer.pid() {
-                process_desc = format!("{pid} (unknown)");
-                if let Ok(peer_process) = procfs::process::Process::new(pid) {
-                    if let Ok(cmdline) = peer_process.cmdline() {
-                        if let Some(exe) = cmdline.first() {
-                            process_desc = format!("{pid} ({exe:?})");
+        let peer_desc = socket
+            .peer_cred()
+            .map(|peer| {
+                let mut process_desc = String::from("<unknown>");
+                if let Some(pid) = peer.pid() {
+                    process_desc = format!("{pid} (unknown)");
+                    if let Ok(peer_process) = procfs::process::Process::new(pid) {
+                        if let Ok(cmdline) = peer_process.cmdline() {
+                            if let Some(exe) = cmdline.first() {
+                                process_desc = format!("{pid} ({exe:?})");
+                            }
                         }
                     }
                 }
-            }
-            let uid = peer.uid();
-            format!("Process {process_desc} of user {uid}")
-        }).ok();
+                let uid = peer.uid();
+                format!("Process {process_desc} of user {uid}")
+            })
+            .ok();
         self.create_new_session(peer_desc)
     }
 }
