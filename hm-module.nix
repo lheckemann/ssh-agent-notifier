@@ -59,7 +59,7 @@ in {
     # Use mkBefore so that we get in before the equivalent settings
     # from services.ssh-agent and services.gpg-agent
     home.sessionVariablesExtra = lib.mkIf cfg.setSshAuthSock (lib.mkBefore ''
-      [[ -n "$SSH_AUTH_SOCK" ]] || export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/${cfg.listenSocket}"
+      [[ -z "$SSH_CONNECTION" || -z "$SSH_AUTH_SOCK" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/${cfg.listenSocket}"
     '');
   };
 }
