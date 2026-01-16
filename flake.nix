@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "git+https://cl.forkos.org/nixpkgs";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
   };
   outputs = { self, nixpkgs }: let
     inherit (nixpkgs) lib;
