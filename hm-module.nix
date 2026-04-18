@@ -61,5 +61,9 @@ in {
     home.sessionVariablesExtra = lib.mkIf cfg.setSshAuthSock (lib.mkBefore ''
       [[ -z "$SSH_CONNECTION" || -z "$SSH_AUTH_SOCK" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/${cfg.listenSocket}"
     '');
+
+    sshAuthSock.initialization.bash = lib.mkIf cfg.setSshAuthSock ((if config.services.ssh-agent.enable then lib.mkOverride 60 else x: x) ''
+      [[ -z "$SSH_CONNECTION" || -z "$SSH_AUTH_SOCK" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/${cfg.listenSocket}"
+    '');
   };
 }
