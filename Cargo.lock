@@ -1508,9 +1508,9 @@ dependencies = [
 
 [[package]]
 name = "secrecy"
-version = "0.8.0"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9bd1c54ea06cfd2f6b63219704de0b9b4f72dcc2b8fdef820be6cd799780e91e"
+checksum = "e891af845473308773346dc847b2c23ee78fe442e0472ac50e22a18a93d3ae5a"
 dependencies = [
  "zeroize",
 ]
@@ -1654,8 +1654,8 @@ dependencies = [
 
 [[package]]
 name = "ssh-agent-lib"
-version = "0.4.0"
-source = "git+https://github.com/wiktor-k/ssh-agent-lib?rev=7f069b1a9c2dc4656f104e2e3643a0efef096e37#7f069b1a9c2dc4656f104e2e3643a0efef096e37"
+version = "0.5.2"
+source = "git+https://github.com/wiktor-k/ssh-agent-lib?rev=1f86f25bd53c236344d60df2574f0a343e9b9136#1f86f25bd53c236344d60df2574f0a343e9b9136"
 dependencies = [
  "async-trait",
  "byteorder",
@@ -1667,7 +1667,7 @@ dependencies = [
  "ssh-encoding",
  "ssh-key",
  "subtle",
- "thiserror 1.0.69",
+ "thiserror",
  "tokio",
  "tokio-util",
 ]
@@ -1758,7 +1758,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b1e66e07de489fe43a46678dd0b8df65e0c973909df1b60ba33874e297ba9b9"
 dependencies = [
  "quick-xml",
- "thiserror 2.0.17",
+ "thiserror",
  "windows",
  "windows-version",
 ]
@@ -1778,31 +1778,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
-dependencies = [
- "thiserror-impl 1.0.69",
-]
-
-[[package]]
-name = "thiserror"
 version = "2.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f63587ca0f12b72a0600bcba1d40081f830876000bb46dd2337a3051618f4fc8"
 dependencies = [
- "thiserror-impl 2.0.17",
-]
-
-[[package]]
-name = "thiserror-impl"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
+ "thiserror-impl",
 ]
 
 [[package]]
