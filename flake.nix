@@ -11,7 +11,7 @@
     });
     homeManagerModules.default = { pkgs, lib, ... }: {
       imports = [./hm-module.nix];
-      services.ssh-agent-notifier.package = self.packages.${pkgs.system}.default;
+      services.ssh-agent-notifier.package = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
     };
   };
 }
