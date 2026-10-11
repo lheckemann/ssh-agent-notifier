@@ -16,5 +16,5 @@ libnotify-sys = "1.0.2"
 notify-rust = "4.11.3"
 procfs = "0.16.0"
 service-binding = "3.0.0"
-ssh-agent-lib = { git = "https://github.com/wiktor-k/ssh-agent-lib", rev = "7f069b1a9c2dc4656f104e2e3643a0efef096e37" }
+ssh-agent-lib = { git = "https://github.com/wiktor-k/ssh-agent-lib", rev = "1f86f25bd53c236344d60df2574f0a343e9b9136" }
 tokio = { version = "1.40.0", features = ["net", "macros", "rt-multi-thread", "sync"] }

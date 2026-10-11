@@ -31,7 +31,7 @@ impl Session for NotifyOnSign {
             let identity = identities
                 .iter()
                 .find_map(|id| {
-                    if id.pubkey == req.pubkey {
+                    if id.credential == req.credential {
                         return Some(id.comment.to_string());
                     }
                     None
